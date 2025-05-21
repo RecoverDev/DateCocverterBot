@@ -1,0 +1,75 @@
+import java.time.Month;
+
+public class SlavonicDate {
+    // Поля класса
+    private int year;          // Год от сотворения мира в звездном храме
+    private String symbolYear; // Символический год Круголета Числобога
+    private String month;      // Название месяца (например, "Рамхат")
+    private int day;           // День месяца
+    private String weekDay;    // День недели (например, "Неделя")
+
+    // Конструктор
+    public SlavonicDate(int year, String symbolYear, String month, int day, String weekDay) {
+        this.year = year;
+        this.symbolYear = symbolYear;
+        this.month = month;
+        this.day = day;
+        this.weekDay = weekDay;
+    }
+
+    // Методы получения значений полей
+    public int getYear() { return year; }
+    public String getSymbolYear() { return symbolYear; }
+    public String getMonth() { return month; }
+    public int getDay() { return day; }
+    public String getWeekDay() { return weekDay; }
+
+    // Метод для удобного отображения даты
+    @Override
+    public String toString() {
+        return "Славяно-Арийская дата:\n" +
+               "Год: " + year + " от С.М.\n" +
+               "Символ года: " + symbolYear + "\n" +
+               "Месяц: " + month + "\n" +
+               "День: " + day + "\n" +
+               "День недели: " + weekDay;
+    }
+
+    // Пример статического метода для создания новой даты на основе григорианской даты
+    public static SlavonicDate fromGregorian(int gregorianYear, Month gregorianMonth, int gregorianDay) {
+        // Допустим, разница между григорианским и славяно-арийским календарём — 5508 лет
+        int slavonicYear = gregorianYear + 5508;
+        
+        // Расчёт символического года
+        String symbolYear = calculateSymbolYear(slavonicYear);
+        
+        // Названия месяцев в славяно-арийском календаре отличаются от григорианского
+        String month = calculateMonth(gregorianMonth);
+        
+        // Мы предполагаем, что день недели известен заранее или рассчитывается отдельно
+        String weekDay = "Неделя"; // заменяется на реальный расчёт дня недели
+        
+        return new SlavonicDate(slavonicYear, symbolYear, month, gregorianDay, weekDay);
+    }
+
+    // Вспомогательная функция для определения символического года
+    private static String calculateSymbolYear(int slavonicYear) {
+        // Предполагается, что символы повторяются каждые 144 года
+        int index = (slavonicYear - 1) % 144;
+        String[] symbols = {"Странник", "Жрец", "Жрица", "Мир", "Свиток", "Феникс", "Лис", "Дракон", "Змей", "Олел", "Дельфин", "Коньи", "Пёс", "Тур", "Хоромы", "Капище"};
+        return symbols[index];
+    }
+
+    // Вспомогательная функция для определения названия месяца
+    private static String calculateMonth(Month gregorianMonth) {
+        // Простая привязка месяцев, тут надо расширять
+        String[] months = {"Рамхат", "Айлет", "Бейлет", "Гэйлет", "Дайлет", "Элет", "Вэйлет", "Хейлет", "Тайлет"};
+        return months[gregorianMonth.ordinal()];
+    }
+
+    // Тестирование класса
+    public static void main(String[] args) {
+        SlavonicDate date = SlavonicDate.fromGregorian(2023, Month.DECEMBER, 15);
+        System.out.println(date.toString());
+    }
+}

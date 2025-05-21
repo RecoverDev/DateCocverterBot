@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: dateconvertor
+bot:
+  name: DateConverter_bot
+  token: 7300834164:AAGPgigOve_tZTjNlZFU7qWS9ME_TxNasm4

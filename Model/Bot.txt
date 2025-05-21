@@ -1,0 +1,175 @@
+Шаги реализации
+1. Добавьте зависимости в файл pom.xml (для Maven):
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-bot</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.14</version>
+    </parent>
+
+    <dependencies>
+        <!-- Для работы с Telegram API -->
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>6.6.0</version>
+        </dependency>
+
+        <!-- Базовая зависимость Spring Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+2. Создаем конфигурационный класс (BotConfig.java)
+Здесь задаем токен нашего бота и имя пользователя (токен замените на ваш собственный).
+
+
+package com.example.mybot;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class BotConfig {
+
+    @Value("${telegram.bot.token}")
+    private String token;
+
+    @Value("${telegram.bot.username}")
+    private String username;
+
+    public String getToken() { return token; }
+
+    public String getUsername() { return username; }
+}
+Добавляем свойства в application.properties
+
+
+# Настройки вашего телеграм-бота
+telegram.bot.token=your_bot_token_here
+telegram.bot.username=your_bot_username
+3. Реализуем сам бот (MyTelegramBot.java)
+Создаем простой Telegram бот с двумя кнопками на панели управления.
+
+
+package com.example.mybot;
+
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+public class MyTelegramBot extends TelegramLongPollingBot {
+
+    private final Logger logger = LoggerFactory.getLogger(MyTelegramBot.class);
+    private final BotConfig config;
+
+    // Метод обработки входящих сообщений
+    @Override
+    public void onUpdateReceived(Update update) {
+        if(update.hasMessage() && update.getMessage().hasText()) {
+            SendMessage message = new SendMessage();
+            message.setChatId(update.getMessage().getChatId());
+            
+            switch (update.getMessage().getText()) {
+                case "/start":
+                    sendWelcomeMessage(message); break;
+                default:
+                    message.setText("Команда не распознана.");
+                    try {
+                        execute(message);
+                    } catch (TelegramApiException e) {
+                        logger.error(e.getMessage(), e);
+                    }
+            }
+        }
+    }
+
+    // Создание приветственного сообщения с кнопками
+    private void sendWelcomeMessage(SendMessage message) {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> rows = new ArrayList<>();
+        
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("Перевести дату");
+        row1.add("Описание");
+        rows.add(row1);
+        
+        keyboardMarkup.setKeyboard(rows);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(false);
+        
+        message.setReplyMarkup(keyboardMarkup);
+        message.setText("Привет! Выбери действие:");
+    
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    // Получение имени и токена бота
+    @Override
+    public String getBotUsername() {
+        return config.getUsername();
+    }
+
+    @Override
+    public String getBotToken() {
+        return config.getToken();
+    }
+}
+4. Запускаем приложение (MyBotApplication.java)
+Создаем основной класс приложения Spring Boot:
+
+
+package com.example.mybot;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MyBotApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MyBotApplication.class, args);
+    }
+}
+Как запустить проект?
+Запустите приложение, выполнив команду:
+
+mvn clean install
+Затем запустите приложение командой:
+
+java -jar target/my-bot-1.0-SNAPSHOT.jar
+Откройте Telegram и отправьте сообщение вашему боту. Если всё настроено правильно, бот должен отправить вам приветственное сообщение с предложенными командами ("Перевести дату" и "Описание").

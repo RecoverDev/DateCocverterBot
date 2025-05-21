@@ -1,0 +1,75 @@
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+public class SlavonicCalendarConverter {
+    
+    // Список символов годов Круголета Числобога
+    private static final List<String> SYMBOLS = Arrays.asList(
+            "Странник", "Жрец", "Жрица", "Мир", "Свиток",
+            "Феникс", "Лис", "Дракон", "Змей", "Олел",
+            "Дельфин", "Коньи", "Пёс", "Тур", "Хоромы", "Капище");
+
+    public static void main(String[] args) {
+        LocalDate date = LocalDate.of(1936, 12, 5);
+        convertToSlavonic(date);
+    }
+
+    /**
+     * Метод преобразования даты григорианского календаря в Круголет Числобога.
+     */
+    public static void convertToSlavonic(LocalDate gregorianDate) {
+        int year = gregorianDate.getYear();
+        
+        // Рассчитываем возраст Вселенной (от Сотворения мира)
+        boolean isAfterAutumnEquinox = gregorianDate.isAfter(LocalDate.of(year, 9, 22));
+        int difference = isAfterAutumnEquinox ? 5509 : 5508;
+        int slavonicYear = year + difference;
+        
+        // Определяем позицию на Круголете Числобога
+        int positionOnCircle = slavonicYear % 144;
+        
+        // Преобразование месяца и дня
+        String monthName = getMonthName(gregorianDate.getMonthValue());
+        int dayInMonth = gregorianDate.getDayOfMonth();
+        
+        // Определяем день недели
+        String weekDay = getWeekDay(slavonicYear, positionOnCircle, gregorianDate.getMonth(), dayInMonth);
+        
+        System.out.println("Григорианская дата: " + gregorianDate +
+                "\nСлавяно-Арийская дата: " + slavonicYear + ", " + SYMBOLS.get(positionOnCircle / 9) + ", " +
+                monthName + ", " + dayInMonth + "-й день, " + weekDay);
+    }
+
+    /**
+     * Возвращает название месяца в славяно-арийском календаре.
+     */
+    private static String getMonthName(int monthNumber) {
+        switch (monthNumber) {
+            case 1: return "Рамхат";
+            case 2: return "Айлет";
+            case 3: return "Бейлет";
+            case 4: return "Гэйлет";
+            case 5: return "Дайлет";
+            case 6: return "Элет";
+            case 7: return "Вэйлет";
+            case 8: return "Хейлет";
+            case 9: return "Тайлет";
+            default: throw new IllegalArgumentException("Invalid month number");
+        }
+    }
+
+    /**
+     * Простая схема для примера расчета дня недели.
+     * В реальной задаче лучше использовать специальную библиотеку или сложный алгоритм расчета.
+     */
+    private static String getWeekDay(int slavonicYear, int positionOnCircle, Month month, int dayInMonth) {
+        // Пример простой схемы определения дня недели.
+        // Настоящий расчет может быть сложнее и зависит от конкретного правила расчета дней недели.
+        if ((slavonicYear + positionOnCircle + dayInMonth) % 9 == 0) {
+            return "Неделя";
+        } else {
+            return "Шестица"; // Здесь должно быть правильное определение дня недели!
+        }
+    }
+}
