@@ -1,7 +1,7 @@
 package ru.student.dateconvertor.Service;
 
 import java.time.LocalDate;
-import java.util.regex.MatchResult;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,33 +19,47 @@ public class ParseDate {
 
     public LocalDate ToLocalDate(String date) {
         LocalDate result = null;
-
-        String strPattern = "(?<day>\\d{1,2})\\W\\d{1,2}\\W\\d{4}";
-
+        this.error = "";
+        
+        String strPattern = "^(?<day>\\d{1,2})\\W(?<month>\\d{1,2})\\W(?<year>\\d{1,4})";
+        
         Pattern pattern = Pattern.compile(strPattern);
-
-        var day = pattern.matcher(date).group(1);
-        int month = Integer.parseInt(pattern.matcher("month").toString());
-        int year = Integer.parseInt(pattern.matcher("year").toString());
-
+        
+        Matcher d = pattern.matcher(date);
+        
+        int day, month, year;
+        day = month = year = 0;
+        
+        if (d.find()) {
+            day = Integer.parseInt(d.group("day"));
+            month = Integer.parseInt(d.group("month"));
+            year = Integer.parseInt(d.group("year"));
+        } else {
+            error = "Not found";
+	    return result;
+        }
+        
         if (year < 1000) {
-            error = "Мне нужно знать полный номер года (4 цифры)";
+            error = "Мне нужно четыре цифры года";
             return result;
         }
-
-        if (month < 1 & month > 12 ) {
-            error = "Номер месяца должен быть от 1 до 12";
+        
+        if (month < 1 || month > 12) {
+            error = "Неверный номер месяца";
             return result;
         }
-
-        // if (day < 1 & day > 31) {
-        //     error = "Неверный номер дня";
-        //     return result;
-        // }
-
-        // result = LocalDate.of(year, month, day);
+        
+        if (day < 1 || day > 31) {
+            error = "Неверный номер дня";
+            return result;
+        }
+        
+        result = LocalDate.of(year, month,day);
 
         return result;
     }
 
+    public String toString(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
 }

@@ -16,11 +16,11 @@ public class ChoiceStyleCommand extends Command{
         switch (text) {
             case "Перевести дату в древнее летоисчесление" -> {
                 nextOperation.setOperation(OperationEnum.ENTER_GRIGORIAN_DATE);
-                result.setText("Введите дату в григорианском стиле в формате\\n ДД.ММ.ГГГГ или ДД ММ ГГГГ или ДД/ММ/ГГГГ");
+                result.setText("Введите дату в григорианском стиле в формате\n ДД.ММ.ГГГГ или ДД ММ ГГГГ или ДД/ММ/ГГГГ");
             }
             case "Перевести дату в григорианский календарь" -> {
                 nextOperation.setOperation(OperationEnum.ENTER_OLD_STYLE_DATE);
-                result.setText("Введите дату в старом летоисчеслении в формате\\n ДД.ММ.ГГГГ или ДД ММ ГГГГ или ДД/ММ/ГГГГ");
+                result.setText("Введите дату в старом летоисчеслении в формате\n ДД.ММ.ГГГГ или ДД ММ ГГГГ или ДД/ММ/ГГГГ");
             }
             case "Описание" -> {
                 nextOperation.setOperation(OperationEnum.DESCRIPTION);

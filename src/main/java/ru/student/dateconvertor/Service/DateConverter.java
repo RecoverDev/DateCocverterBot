@@ -15,6 +15,7 @@ public class DateConverter {
     private static final int DIFFERENCE_YEARS = 5508;
     // Стиль для перевода даты из одного стиля в другой
     private CalendarStyleEnum style;
+    private LocalDate julianDate = null;
 
     public LocalDate convert(LocalDate julianDate, CalendarStyleEnum styleCalendar) {
         this.style = styleCalendar;
@@ -22,7 +23,20 @@ public class DateConverter {
     }
 
     public LocalDate convert(LocalDate julianDate) {
-        LocalDate result;
+        this.julianDate = julianDate;
+        return convert();
+    }
+
+    public LocalDate convert() {
+        LocalDate result = null;
+
+        if (this.julianDate == null) {
+            return result;
+        }
+
+        if (style == null) {
+            return result;
+        }
 
         switch (style) {
             case CalendarStyleEnum.SEPTEMBER_STYLE ->  result = toSeptemberStyle(julianDate); 
@@ -39,7 +53,7 @@ public class DateConverter {
         int year = julianDate.getYear();
         int day = julianDate.getDayOfMonth();
         boolean isSeptemberToDecember = month >= 9 && month <= 12;
-        year =  year - DIFFERENCE_YEARS + (isSeptemberToDecember ? 1 : 0);
+        year =  year + DIFFERENCE_YEARS + (isSeptemberToDecember ? 1 : 0);
         return LocalDate.of(year, month, day);
     }
 
@@ -48,7 +62,7 @@ public class DateConverter {
         int year = julianDate.getYear();
         int day = julianDate.getDayOfMonth();
         boolean isJanuaryOrFebruary = month <= 2;
-        year =  year - DIFFERENCE_YEARS + (isJanuaryOrFebruary ? 1 : 0);
+        year =  year + DIFFERENCE_YEARS + (isJanuaryOrFebruary ? 1 : 0);
         return LocalDate.of(year, month, day);
     }
 

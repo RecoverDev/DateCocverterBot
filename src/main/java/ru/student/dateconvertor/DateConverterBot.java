@@ -31,11 +31,20 @@ public class DateConverterBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        if(update.hasMessage() && update.getMessage().hasText()) {
+        if(update.hasMessage() && update.getMessage().hasText() || update.hasCallbackQuery()) {
             SendMessage message = new SendMessage();
-            String chatId = update.getMessage().getChatId().toString();
-            String userName = update.getMessage().getChat().getUserName();
-            String text = update.getMessage().getText();
+            String chatId = "";
+            String userName = "";
+            String text = "";
+            if (update.hasCallbackQuery()) {
+                chatId = update.getCallbackQuery().getMessage().getChatId().toString();
+                text = update.getCallbackQuery().getData();
+                userName = update.getCallbackQuery().getFrom().getFirstName();
+            } else {
+                chatId = update.getMessage().getChatId().toString();
+                userName = update.getMessage().getChat().getFirstName();
+                text = update.getMessage().getText();
+            }
 
             if (commandsMap.containsKey(nextOperation.getOperation())) {
                 message = commandsMap.get(nextOperation.getOperation()).process(text, chatId, userName);

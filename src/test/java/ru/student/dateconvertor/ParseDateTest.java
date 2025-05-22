@@ -19,4 +19,12 @@ public class ParseDateTest {
         assertThat(parser.ToLocalDate("10.01.2001")).isEqualTo(LocalDate.of(2001,1,10));
 
     }
+
+    @Test
+    @DisplayName("Конвертируем дату из строки 10/01/2001")
+    public void toLocalDateTest_slesh() {
+        ParseDate parser = new ParseDate();
+        assertThat(parser.ToLocalDate("10/01/2001")).isEqualTo(LocalDate.of(2001,1,10));
+
+    }
 }
