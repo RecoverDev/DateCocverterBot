@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.student.dateconvertor.Command.ChoiceStyleCommand;
 import ru.student.dateconvertor.Command.Command;
 import ru.student.dateconvertor.Command.ConvertToOldStyleCommand;
+import ru.student.dateconvertor.Command.DescriptionCommand;
 import ru.student.dateconvertor.Command.EnterGrigarianDateCommand;
 import ru.student.dateconvertor.Command.StartCommand;
 import ru.student.dateconvertor.Command.UnknowCommand;
@@ -32,13 +33,17 @@ public class CommandConfiguration {
     @Autowired
     private ConvertToOldStyleCommand convertToOldStyleCommand;
 
+    @Autowired
+    private DescriptionCommand descriptionCommand;
+
     @Bean
     public Map<OperationEnum, Command> getCommandMap() {
         return Map.ofEntries(Map.entry(OperationEnum.UNKNOW, unknowCommand),
                              Map.entry(OperationEnum.START, startCommand),
                              Map.entry(OperationEnum.CHOICE_STYLE, choiceStyleCommand),
                              Map.entry(OperationEnum.ENTER_GRIGORIAN_DATE, enterGrigarianDateCommand),
-                             Map.entry(OperationEnum.CONVERT_TO_OLD_STYLE, convertToOldStyleCommand));
+                             Map.entry(OperationEnum.CONVERT_TO_OLD_STYLE, convertToOldStyleCommand),
+                             Map.entry(OperationEnum.DESCRIPTION, descriptionCommand));
     }
 
 }
