@@ -10,7 +10,8 @@ import lombok.Setter;
 @Component
 @Setter
 @Getter
-public class DateConverter {
+public class DateConverterToJulian {
+
     // Константа для разницы между греческим и христианским летоисчислением
     private static final int DIFFERENCE_YEARS = 5508;
     // Стиль для перевода даты из одного стиля в другой
@@ -53,7 +54,7 @@ public class DateConverter {
         int year = julianDate.getYear();
         int day = julianDate.getDayOfMonth();
         boolean isSeptemberToDecember = month >= 9 && month <= 12;
-        year =  year + DIFFERENCE_YEARS + (isSeptemberToDecember ? 1 : 0);
+        year =  year - DIFFERENCE_YEARS - (isSeptemberToDecember ? 1 : 0);
         return LocalDate.of(year, month, day);
     }
 
@@ -62,8 +63,7 @@ public class DateConverter {
         int year = julianDate.getYear();
         int day = julianDate.getDayOfMonth();
         boolean isJanuaryOrFebruary = month <= 2;
-        year =  year + DIFFERENCE_YEARS + (isJanuaryOrFebruary ? 1 : 0);
+        year =  year - DIFFERENCE_YEARS - (isJanuaryOrFebruary ? 1 : 0);
         return LocalDate.of(year, month, day);
     }
-
 }

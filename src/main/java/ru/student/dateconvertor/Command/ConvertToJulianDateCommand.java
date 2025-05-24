@@ -8,15 +8,15 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import ru.student.dateconvertor.BotComponent.ReplyKeyboard;
 import ru.student.dateconvertor.Service.CalendarStyleEnum;
-import ru.student.dateconvertor.Service.DateConverterToOldStyle;
+import ru.student.dateconvertor.Service.DateConverterToJulian;
 import ru.student.dateconvertor.Service.OperationEnum;
 import ru.student.dateconvertor.Service.ParseDate;
 
 @Component
-public class ConvertToOldStyleCommand extends Command{
+public class ConvertToJulianDateCommand extends Command {
 
     @Autowired
-    private DateConverterToOldStyle dateConverter;
+    private DateConverterToJulian dateConverter;
 
     @Autowired
     private ParseDate parseDate;
@@ -35,10 +35,10 @@ public class ConvertToOldStyleCommand extends Command{
             case "Ультамартовский стиль" -> dateConverter.setStyle(CalendarStyleEnum.ULTRAMARTCH_STYLE);
             default -> dateConverter.setStyle(CalendarStyleEnum.SEPTEMBER_STYLE);
         }
+        LocalDate julianDate = dateConverter.convert();
+        String result = parseDate.toString(julianDate);
 
-        LocalDate oldDate = dateConverter.convert();
-        String result = parseDate.toString(oldDate);
-        message.setText("В древнем летоисчеслении эта дата выглядит так: \n" + result);
+        message.setText("В григорианском летоисчеслении эта дата выглядит так: \n " + result);
         message.setReplyMarkup(replyKeyboard.getMainReplyKeyboard());
         nextOperation.setOperation(OperationEnum.CHOICE_STYLE);
 
