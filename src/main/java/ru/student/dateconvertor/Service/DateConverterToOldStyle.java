@@ -39,9 +39,9 @@ public class DateConverterToOldStyle {
         }
 
         switch (style) {
-            case CalendarStyleEnum.SEPTEMBER_STYLE ->  result = toSeptemberStyle(julianDate); 
-            case CalendarStyleEnum.MARTCH_STYLE ->  result = toMartchStyle(julianDate); 
-            case CalendarStyleEnum.ULTRAMARTCH_STYLE ->  result = toMartchStyle(julianDate); 
+            case SEPTEMBER_STYLE ->  result = toSeptemberStyle(julianDate); 
+            case MARTCH_STYLE ->  result = toMartchStyle(julianDate); 
+            case ULTRAMARTCH_STYLE ->  result = toMartchStyle(julianDate); 
             default -> result = julianDate;
         }
 
