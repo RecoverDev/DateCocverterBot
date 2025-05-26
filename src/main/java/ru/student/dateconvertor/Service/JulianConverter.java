@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JulianConverter {
+    private final int DEFFERENCE_DAYS = 13;
 
     public LocalDate toJulian(LocalDate gregorianDate) {
         int year = gregorianDate.getYear();
@@ -14,10 +15,23 @@ public class JulianConverter {
         boolean isBeforeTransition = !gregorianDate.isAfter(LocalDate.of(1918, 2, 1));
 
         // Рассчитываем разницу
-        int offsetDays = isBeforeTransition ? 13 : ((year >= 1900) ? calculateOffset(year) : 13);
+        int offsetDays = isBeforeTransition ? DEFFERENCE_DAYS : ((year >= 1900) ? calculateOffset(year) : DEFFERENCE_DAYS);
 
         // Создаем новую дату, применяя смещение
         return gregorianDate.minusDays(offsetDays);        
+    }
+
+    public LocalDate fromJulian(LocalDate julianDate) {
+        int year = julianDate.getYear();
+
+        // Проверяем дату на необходимость преобразования
+        boolean isBeforeTransition = !julianDate.isAfter(LocalDate.of(1918, 2, 1));
+
+        // Рассчитываем разницу
+        int offsetDays = isBeforeTransition ? DEFFERENCE_DAYS : ((year >= 1900) ? calculateOffset(year) : DEFFERENCE_DAYS);
+
+        // Создаем новую дату, применяя смещение
+        return julianDate.plusDays(offsetDays);        
     }
 
     private int calculateOffset(int year) {

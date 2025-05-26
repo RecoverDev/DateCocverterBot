@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import ru.student.dateconvertor.Command.ChoiceStyleCommand;
 import ru.student.dateconvertor.Command.Command;
-import ru.student.dateconvertor.Command.ConvertToJulianDateCommand;
+import ru.student.dateconvertor.Command.ConvertToGrigorianDateCommand;
 import ru.student.dateconvertor.Command.ConvertToOldStyleCommand;
 import ru.student.dateconvertor.Command.DescriptionCommand;
 import ru.student.dateconvertor.Command.EnterGrigarianDateCommand;
@@ -42,7 +42,7 @@ public class CommandConfiguration {
     private EnterOldStyleDateCommand enterOldStyleDate;
 
     @Autowired
-    private ConvertToJulianDateCommand convertToJulianDate;
+    private ConvertToGrigorianDateCommand convertToJulianDate;
 
     @Bean
     public Map<OperationEnum, Command> getCommandMap() {

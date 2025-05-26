@@ -9,14 +9,18 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.student.dateconvertor.BotComponent.ReplyKeyboard;
 import ru.student.dateconvertor.Service.CalendarStyleEnum;
 import ru.student.dateconvertor.Service.DateConverterToJulian;
+import ru.student.dateconvertor.Service.JulianConverter;
 import ru.student.dateconvertor.Service.OperationEnum;
 import ru.student.dateconvertor.Service.ParseDate;
 
 @Component
-public class ConvertToJulianDateCommand extends Command {
+public class ConvertToGrigorianDateCommand extends Command {
 
     @Autowired
     private DateConverterToJulian dateConverter;
+
+    @Autowired
+    private JulianConverter julianConverter;
 
     @Autowired
     private ParseDate parseDate;
@@ -36,7 +40,7 @@ public class ConvertToJulianDateCommand extends Command {
             default -> dateConverter.setStyle(CalendarStyleEnum.SEPTEMBER_STYLE);
         }
         LocalDate julianDate = dateConverter.convert();
-        String result = parseDate.toString(julianDate);
+        String result = parseDate.toString(julianConverter.fromJulian(julianDate));
 
         message.setText("В григорианском летоисчеслении эта дата выглядит так: \n " + result);
         message.setReplyMarkup(replyKeyboard.getMainReplyKeyboard());
