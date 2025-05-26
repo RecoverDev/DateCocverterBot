@@ -12,10 +12,10 @@ public class JulianConverter {
         int year = gregorianDate.getYear();
 
         // Проверяем дату на необходимость преобразования
-        boolean isBeforeTransition = !gregorianDate.isAfter(LocalDate.of(1918, 2, 1));
+        boolean isBeforeTransition = gregorianDate.isBefore(LocalDate.of(1918, 2, 1));
 
         // Рассчитываем разницу
-        int offsetDays = isBeforeTransition ? DEFFERENCE_DAYS : ((year >= 1900) ? calculateOffset(year) : DEFFERENCE_DAYS);
+        int offsetDays = isBeforeTransition ? DEFFERENCE_DAYS - definition(year) : (calculateOffset(year) + DEFFERENCE_DAYS);
 
         // Создаем новую дату, применяя смещение
         return gregorianDate.minusDays(offsetDays);        
@@ -28,7 +28,7 @@ public class JulianConverter {
         boolean isBeforeTransition = !julianDate.isAfter(LocalDate.of(1918, 2, 1));
 
         // Рассчитываем разницу
-        int offsetDays = isBeforeTransition ? DEFFERENCE_DAYS : ((year >= 1900) ? calculateOffset(year) : DEFFERENCE_DAYS);
+        int offsetDays = isBeforeTransition ? DEFFERENCE_DAYS - definition(year): ((year >= 1900) ? DEFFERENCE_DAYS + calculateOffset(year) : DEFFERENCE_DAYS);
 
         // Создаем новую дату, применяя смещение
         return julianDate.plusDays(offsetDays);        
@@ -36,7 +36,11 @@ public class JulianConverter {
 
     private int calculateOffset(int year) {
         // Формула приблизительного расчета смещения дней между григорианским и юлианским календарями
-        return Math.floorDiv((year - 1900), 100) + 1;
-    }    
+        return Math.floorDiv((year - 1900), 100);
+    }
+    
+    private int definition(int year) {
+        return Math.floorDiv(1900 - year, 100) + 1;
+    }
 
 }
