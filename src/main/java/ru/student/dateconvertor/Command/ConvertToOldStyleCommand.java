@@ -38,7 +38,7 @@ public class ConvertToOldStyleCommand extends Command{
 
         LocalDate oldDate = dateConverter.convert();
         String result = parseDate.toString(oldDate);
-        message.setText("В древнем летоисчеслении эта дата выглядит так: \n" + result);
+        message.setText("В древнем летоисчислении эта дата выглядит так: \n" + result);
         message.setReplyMarkup(replyKeyboard.getMainReplyKeyboard());
         nextOperation.setOperation(OperationEnum.CHOICE_STYLE);
 

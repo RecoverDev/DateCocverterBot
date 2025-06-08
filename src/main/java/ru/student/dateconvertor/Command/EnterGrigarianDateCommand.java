@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import lombok.RequiredArgsConstructor;
 import ru.student.dateconvertor.BotComponent.InlineKeyboard;
-import ru.student.dateconvertor.BotComponent.ReplyKeyboard;
 import ru.student.dateconvertor.Service.DateConverterToOldStyle;
 import ru.student.dateconvertor.Service.JulianConverter;
 import ru.student.dateconvertor.Service.OperationEnum;
@@ -31,26 +30,26 @@ public class EnterGrigarianDateCommand extends Command{
     private InlineKeyboard inlineKeyboard;
 
     @Autowired
-    private ReplyKeyboard replyKeyboard;
+    private ChoiceStyleCommand choiceStyleCommand;
 
     @Override
     public SendMessage process(String text, String chatId, String userName) {
         SendMessage message = new SendMessage();
-        message.setChatId(chatId);
 
         LocalDate date = parser.ToLocalDate(text);
         if (parser.getError().length() > 0) {
-            message.setText(parser.getError());
-            message.setReplyMarkup(replyKeyboard.getMainReplyKeyboard());
-            nextOperation.setOperation(OperationEnum.CHOICE_STYLE);
+            message = choiceStyleCommand.process("Перевести дату в древнее летоисчесление", chatId, userName);
+            message.setText(parser.getError() + "\n" + message.getText());
             return message;
         }
         
         dateConverter.setJulianDate(julianConverter.toJulian(date));
+        message.setChatId(chatId);
         message.setText("Выберите стиль даты");
         message.setReplyMarkup(inlineKeyboard.getInlineKeyboard());
         nextOperation.setOperation(OperationEnum.CONVERT_TO_OLD_STYLE);
         return message;
     }
+
 
 }

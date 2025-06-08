@@ -42,7 +42,7 @@ public class ConvertToGrigorianDateCommand extends Command {
         LocalDate julianDate = dateConverter.convert();
         String result = parseDate.toString(julianConverter.fromJulian(julianDate));
 
-        message.setText("В григорианском летоисчеслении эта дата выглядит так: \n " + result);
+        message.setText("В григорианском летоисчислении эта дата выглядит так: \n " + result);
         message.setReplyMarkup(replyKeyboard.getMainReplyKeyboard());
         nextOperation.setOperation(OperationEnum.CHOICE_STYLE);
 

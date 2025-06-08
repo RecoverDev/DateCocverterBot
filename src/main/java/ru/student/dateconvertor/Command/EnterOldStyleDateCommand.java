@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import ru.student.dateconvertor.BotComponent.InlineKeyboard;
-import ru.student.dateconvertor.BotComponent.ReplyKeyboard;
 import ru.student.dateconvertor.Service.DateConverterToJulian;
 import ru.student.dateconvertor.Service.OperationEnum;
 import ru.student.dateconvertor.Service.ParseDate;
@@ -22,10 +21,10 @@ public class EnterOldStyleDateCommand extends Command {
     private InlineKeyboard inlineKeyboard;
 
     @Autowired
-    private ReplyKeyboard replyKeyboard;
+    private DateConverterToJulian dateConverter;
 
     @Autowired
-    private DateConverterToJulian dateConverter;
+    private ChoiceStyleCommand choiceStyleCommand;
 
     @Override
     public SendMessage process(String text, String chatId, String userName) {
@@ -34,15 +33,13 @@ public class EnterOldStyleDateCommand extends Command {
 
         LocalDate date = parser.ToLocalDate(text);
         if (parser.getError().length() > 0) {
-            message.setText(parser.getError());
-            message.setReplyMarkup(replyKeyboard.getMainReplyKeyboard());
-            nextOperation.setOperation(OperationEnum.CHOICE_STYLE);
+            message = choiceStyleCommand.process("Перевести дату в григорианский календарь", chatId, userName);
+            message.setText(parser.getError() + "\n" + message.getText());
             return message;
         }
         if (date.getYear() < 5509) {
-            message.setText("Год не может быть меньше 5509");
-            message.setReplyMarkup(replyKeyboard.getMainReplyKeyboard());
-            nextOperation.setOperation(OperationEnum.CHOICE_STYLE);
+            message = choiceStyleCommand.process("Перевести дату в григорианский календарь", chatId, userName);
+            message.setText("Год не может быть меньше 5509" + "\n" + message.getText());
             return message;
         }
 
