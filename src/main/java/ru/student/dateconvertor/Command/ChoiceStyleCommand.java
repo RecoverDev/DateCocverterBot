@@ -12,6 +12,9 @@ public class ChoiceStyleCommand extends Command{
     @Autowired
     private DescriptionCommand descriptionCommand;
 
+    @Autowired
+    private StartCommand startCommand;
+
     @Override
     public SendMessage process(String text, String chatId, String userName) {
         SendMessage result = new SendMessage();
@@ -31,8 +34,7 @@ public class ChoiceStyleCommand extends Command{
                 result = descriptionCommand.process(text, chatId, userName);
             }
             default -> {
-                nextOperation.setOperation(OperationEnum.UNKNOW);
-                result.setText("Я не понял что делать...");
+                result = startCommand.process(text, chatId, userName);
             }
         }
         return result;

@@ -35,7 +35,7 @@ public class ParseDate {
             month = Integer.parseInt(d.group("month"));
             year = Integer.parseInt(d.group("year"));
         } else {
-            error = "Not found";
+            error = "Я ждал дату";
 	    return result;
         }
         

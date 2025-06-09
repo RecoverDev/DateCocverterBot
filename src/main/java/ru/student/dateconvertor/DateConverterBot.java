@@ -48,6 +48,8 @@ public class DateConverterBot extends TelegramLongPollingBot {
 
             if (commandsMap.containsKey(nextOperation.getOperation())) {
                 message = commandsMap.get(nextOperation.getOperation()).process(text, chatId, userName);
+            } else if (text == "/start") {
+                message = commandsMap.get(OperationEnum.START).process(text, chatId, userName);
             } else {
                 message = commandsMap.get(OperationEnum.UNKNOW).process(text, chatId, userName);
             }
